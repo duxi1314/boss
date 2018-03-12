@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript">
+		function add_tabs() {
+			result= $('#tt').tabs('exists','新选项卡面板')
+			if(result){
+				$('#tt').tabs('select','新选项卡面板')
+			}else{
+				$('#tt').tabs('add',{
+					title: '新选项卡面板',
+					selected: true
+				});
+			}
+			}
+			
+	</script>
+</head>
+<body class="easyui-layout">
+		<div data-options="region:'north'" style="height:50px"></div>
+		<div data-options="region:'west',split:true" title="West" style="width:200px;">
+		<div class="easyui-accordion" data-options="fit:true">
+		<div title="面板01" >
+		<a id="btn" href="#" class="easyui-linkbutton" 
+		data-options="iconCls:'icon-search'" onclick="add_tabs()">添加按钮</a>
+		</div>
+		<div title="面板02" >面板02</div>
+		<div title="面板03" >面板03</div>
+	</div>
+		</div>
+		<div data-options="region:'center',title:'Main Title',iconCls:'icon-ok'">
+		<div id="tt" class="easyui-tabs" data-options="fit:true">
+		<div title="选项1" >选项1</div>
+		<div title="选项2" >选项2</div>
+		<div title="选项3" >选项3</div>
+		</div>
+		</div>
+</body>
+</html>

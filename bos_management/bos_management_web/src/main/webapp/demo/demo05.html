@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+	<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+	
+	<script type="text/javascript">
+		function add_tabs() {
+			result= $('#tt').tabs('exists','新选项卡面板')
+			if(result){
+				$('#tt').tabs('select','新选项卡面板')
+			}else{
+				$('#tt').tabs('add',{
+					title: '新选项卡面板',
+					selected: true
+				});
+			}
+			}
+	</script>
+	<script type="text/javascript">
+	
+	/*Ztree创建方法 :
+		1.写一个入口方法:$(function(){}
+		2.在面板中添加
+		<ul id="treeDemo" class="ztree"></ul>  ,class
+		必须为'ztree '
+		*/
+		
+		$(function(){
+			var setting= {
+					
+					data: {
+						simpleData: {
+							enable: true,
+							idKey: "id",
+							pIdKey: "pId",
+							rootPId: 0
+						}
+					}
+			};
+			var zNodes=[
+			     {"name":"节点1","id":"1","pId":"0"},      
+			     {"name":"节点2","id":"2","pId":"0"},      
+			     {"name":"节点3","id":"3","pId":"0"},      
+			     {"name":"节点11","id":"11","pId":"1"},      
+			     {"name":"节点111","id":"111","pId":"11"},      
+			            ]
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		})
+	
+	</script>
+</head>
+<body class="easyui-layout">
+		<div data-options="region:'north'" style="height:50px"></div>
+		<div data-options="region:'west',split:true" title="West" style="width:200px;">
+		<div class="easyui-accordion" data-options="fit:true">
+		<div title="面板01" >
+		<a id="btn" href="#" class="easyui-linkbutton" 
+		data-options="iconCls:'icon-search'" onclick="add_tabs()">添加按钮</a>
+		</div>
+		
+		<div title="面板02" >
+			<ul id="treeDemo" class="ztree"></ul>
+		</div>
+		<div title="面板03" >面板03</div>
+	</div>
+		</div>
+		<div data-options="region:'center',title:'Main Title',iconCls:'icon-ok'">
+		<div id="tt" class="easyui-tabs" data-options="fit:true">
+		<div title="选项1" >选项1</div>
+		<div title="选项2" >选项2</div>
+		<div title="选项3" >选项3</div>
+		</div>
+		</div>
+</body>
+</html>
