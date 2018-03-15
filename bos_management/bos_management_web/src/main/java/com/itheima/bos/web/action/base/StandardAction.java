@@ -25,6 +25,7 @@ import com.itheima.bos.service.base.StandardService;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -94,7 +95,7 @@ public class StandardAction extends ActionSupport
 		map.put("rows", list);
 		
 		//JSONObject:封装对象或者Map集合
-		//JSONObject:封装数组或者list集合
+		//JSONArray:封装数组或者list集合
 		
 		//Ajax用JSON传数据,所以要把对象转成JSON字符串
 		String json = JSONObject.fromObject(map).toString();
@@ -106,6 +107,22 @@ public class StandardAction extends ActionSupport
 		response.getWriter().write(json);
 		
 		return NONE;
+	}
+	
+	@Action(value="standard_findAll")
+	public String findAll() throws IOException{
+		
+		Page<Standard> page =standardService.findAll(null);
+		List<Standard> list = page.getContent();
+		
+		String json = JSONArray.fromObject(list).toString();
+		
+		HttpServletResponse response = ServletActionContext.getResponse();
+		//解决乱码
+		response.setContentType("application/json;charset=UTF-8");
+		response.getWriter().write(json);
+		return NONE;
+		
 	}
 
 }
