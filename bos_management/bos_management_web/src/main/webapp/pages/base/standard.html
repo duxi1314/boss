@@ -30,7 +30,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standardAction_pageQuery.action",
 					idField : 'id',
 					columns : columns
 				});
@@ -50,7 +50,14 @@
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					/* 获取到的是数组 */
+					var result =$("#grid").datagrid("getSelections")
+					if(result.length ==1){
+						$("#standardWindow").window("open") 
+						$("#standardForm").form("load",result[0])
+					}else{
+						$.messager.alert('提示','请选择一条数据进行修改---')
+					}
 				}
 			},{
 				id : 'button-delete',
@@ -114,6 +121,14 @@
 				align : 'center'
 			} ] ];
 		</script>
+		<script type="text/javascript">
+			function submitData() {
+				var result = $("#standardForm").form("validate")
+				if(result){
+					$("#standardForm").submit()
+				}
+			}
+		</script>
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -124,13 +139,13 @@
 		<div class="easyui-window" title="对收派标准进行添加或者修改" id="standardWindow" collapsible="false" minimizable="false" maximizable="false" modal="true" closed="true" style="width:600px;top:50px;left:200px">
 			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
-					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+					<a id="save" onclick="submitData()"  icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
 				</div>
 			</div>
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
 				
-				<form>
+				<form id="standardForm" method="post" action="../../standardAction_save.action">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">收派标准信息
