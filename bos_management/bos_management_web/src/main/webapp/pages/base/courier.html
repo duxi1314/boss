@@ -24,6 +24,34 @@
 				alert("修改...");
 			}
 			
+			function openSearchWindow(){
+				$('#searchWindow').window("open");
+			}
+			//将表单中的数据转换成json 
+			$.fn.serializeJson=function(){  
+	            var serializeObj={};  
+	            var array=this.serializeArray();  
+	            var str=this.serialize();  
+	            $(array).each(function(){  
+	                if(serializeObj[this.name]){  
+	                    if($.isArray(serializeObj[this.name])){  
+	                        serializeObj[this.name].push(this.value);  
+	                    }else{  
+	                        serializeObj[this.name]=[serializeObj[this.name],this.value];  
+	                    }  
+	                }else{  
+	                    serializeObj[this.name]=this.value;   
+	                }  
+	            });  
+	            return serializeObj;  
+	        }; 
+	        
+	        function doSearch(){
+	        	var result = $("#searchForm").serializeJson();
+	        	$("#grid").datagrid("load",result);
+	        }
+	        
+	        
 			function doDelete(){
 				var rows = $("#grid").datagrid("getSelections");
 				if(rows.length==0){
@@ -71,7 +99,13 @@
 				text : '还原',
 				iconCls : 'icon-save',
 				handler : doRestore
+			},{
+				id : 'button-search',
+				text : '查询',
+				iconCls : 'icon-search',
+				handler : openSearchWindow
 			}];
+			
 			// 定义列
 			var columns = [ [ {
 				field : 'id',
@@ -191,6 +225,8 @@
 				}
 			}
 		</script>
+		
+		
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -271,7 +307,7 @@
 		<!-- 查询快递员-->
 		<div class="easyui-window" title="查询快递员窗口" closed="true" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="width: 400px; top:40px;left:200px">
 			<div style="overflow:auto;padding:5px;" border="false">
-				<form id="searchForm">
+				<form id="searchForm"  >
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">查询条件</td>
@@ -301,7 +337,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+							<td colspan="2"><a id="searchBtn"  onclick="doSearch()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
 						</tr>
 					</table>
 				</form>
