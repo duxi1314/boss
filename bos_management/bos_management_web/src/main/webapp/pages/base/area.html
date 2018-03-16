@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.portal.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../../js/jquery.ocupload-1.1.2.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			function doAdd(){
@@ -87,7 +88,6 @@
 			$(function(){
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
-				
 				// 区域管理数据表格
 				$('#grid').datagrid( {
 					iconCls : 'icon-forward',
@@ -103,6 +103,10 @@
 					columns : columns,
 					onDblClickRow : doDblClickRow
 				});
+				
+				$("#button-import").upload({
+					action:"../../areaAction_importXLS.action"
+				})
 				
 				// 添加、修改区域窗口
 				$('#addWindow').window({

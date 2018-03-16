@@ -21,8 +21,8 @@
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.159.66:1521:ORCL" />
-		<property name="user" value="zhangsan" />
-		<property name="password" value="zs123" />
+		<property name="user" value="scott" />
+		<property name="password" value="tiger" />
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
