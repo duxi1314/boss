@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 
 import com.itheima.bos.domain.base.Courier;
 import com.itheima.bos.domain.base.Standard;
@@ -50,14 +51,13 @@ public class CourierAction extends ActionSupport
 
 	private Courier model = new Courier();
 
-	@Autowired
-	private CourierService courierService;
-
 	@Override
 	public Courier getModel() {
-
 		return model;
 	}
+
+	@Autowired
+	private CourierService courierService;
 
 	@Action(value = "courierAction_save", results = {
 			@Result(name = "success", location = "/pages/base/courier.html", type = "redirect") })
@@ -143,7 +143,7 @@ public class CourierAction extends ActionSupport
 		};
 
 		Pageable pageable = new PageRequest(page - 1, rows);
-		Page<Courier> page = courierService.findAll(specification,pageable);
+		Page<Courier> page = courierService.findAll(specification, pageable);
 
 		long total = page.getTotalElements();
 		List<Courier> list = page.getContent();

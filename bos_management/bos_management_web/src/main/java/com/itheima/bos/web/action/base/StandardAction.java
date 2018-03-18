@@ -37,41 +37,22 @@ import net.sf.json.JSONObject;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class StandardAction extends ActionSupport
-		implements ModelDriven<Standard> {
+public class StandardAction extends CommonAction<Standard> {
 
-	private Standard model = new Standard();
+	public StandardAction() {
+		super(Standard.class);  
+	}
 
 	@Autowired
 	private StandardService standardService;
 
-	@Override
-	public Standard getModel() {
-
-		return model;
-	}
-
 	@Action(value = "standardAction_save", results = {
 			@Result(name = "success", location = "/pages/base/standard.html", type = "redirect") })
 	public String save() {
-		System.out.println("do save:"+model.getName());
-		standardService.save(model);
-		System.out.println("after save:"+model);
-
+		standardService.save(getModel());
 		return SUCCESS;
 	}
 	
-	
-	private int page;
-	private int rows;
-	
-	public void setPage(int page) {
-		this.page = page;
-	}
-	
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
 	
 	
 	//Ajax不用跳转界面
@@ -80,32 +61,9 @@ public class StandardAction extends ActionSupport
 		//EasyUI页面从1开始,Spring Data JPA页面从0开始,所以page要-1
 		
 		Pageable pageable= new PageRequest(page-1, rows);
-		
 		Page<Standard> page =standardService.findAll(pageable);
 		
-		//总数据条数
-		long total = page.getTotalElements();
-		
-		//当前页面要实现的内容
-		List<Standard> list = page.getContent();
-		
-		//封装数据
-		Map<String,Object> map=new HashMap<>();
-		map.put("total", total);
-		map.put("rows", list);
-		
-		//JSONObject:封装对象或者Map集合
-		//JSONArray:封装数组或者list集合
-		
-		//Ajax用JSON传数据,所以要把对象转成JSON字符串
-		String json = JSONObject.fromObject(map).toString();
-		
-		
-		HttpServletResponse response = ServletActionContext.getResponse();
-		//解决乱码
-		response.setContentType("application/json;charset=UTF-8");
-		response.getWriter().write(json);
-		
+		pageToJson(page,null);
 		return NONE;
 	}
 	
