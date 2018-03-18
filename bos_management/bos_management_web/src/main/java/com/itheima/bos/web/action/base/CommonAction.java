@@ -35,7 +35,10 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 	@Override
 	public T getModel() {
 		try {
-			model = clazz.newInstance();
+			if (model == null) {
+				//每次都会重新创建一次对象,所以要进行判断
+				model = clazz.newInstance();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,7 +87,8 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 		response.getWriter().write(json);
 	}
 
-	public void listToJson(List<T> list, JsonConfig jsonConfig) throws IOException {
+	public void listToJson(List<T> list, JsonConfig jsonConfig)
+			throws IOException {
 		String json;
 
 		if (jsonConfig != null) {

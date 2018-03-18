@@ -9,7 +9,8 @@ import com.itheima.bos.domain.base.SubArea;
  */
 public interface SubAreaService {
 
-	void save(SubArea model);
+	void save(SubArea SubArea);
+
 
 }
   

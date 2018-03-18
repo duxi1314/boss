@@ -17,13 +17,14 @@ import com.itheima.bos.service.base.SubAreaService;
 @Transactional
 @Service
 public class SubAreaServiceImpl implements SubAreaService {
-	
+
 	@Autowired
 	private SubAreaRepository subAreaRepository;
 
 	@Override
-	public void save(SubArea model) {
-		subAreaRepository.save(model);
-	}
+	public void save(SubArea SubArea) {
 
+		subAreaRepository.save(SubArea);
+	}
+	
 }
