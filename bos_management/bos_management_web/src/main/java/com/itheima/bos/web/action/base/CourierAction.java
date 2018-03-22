@@ -26,7 +26,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
 import com.itheima.bos.domain.base.Courier;
 import com.itheima.bos.domain.base.Standard;
@@ -46,14 +45,10 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class CourierAction extends ActionSupport
-		implements ModelDriven<Courier> {
+public class CourierAction extends CommonAction<Courier> {
 
-	private Courier model = new Courier();
-
-	@Override
-	public Courier getModel() {
-		return model;
+	public CourierAction() {
+		super(Courier.class);
 	}
 
 	@Autowired
@@ -63,19 +58,8 @@ public class CourierAction extends ActionSupport
 			@Result(name = "success", location = "/pages/base/courier.html", type = "redirect") })
 	public String save() {
 
-		courierService.save(model);
+		courierService.save(getModel());
 		return SUCCESS;
-	}
-
-	private int page;
-	private int rows;
-
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-	public void setRows(int rows) {
-		this.rows = rows;
 	}
 
 	@Action("courierAction_pageQuery")
@@ -96,10 +80,10 @@ public class CourierAction extends ActionSupport
 			public Predicate toPredicate(Root<Courier> root,
 					CriteriaQuery<?> query, CriteriaBuilder cb) {
 
-				String courierNum = model.getCourierNum();
-				String company = model.getCompany();
-				String type = model.getType();
-				Standard standard = model.getStandard();
+				String courierNum = getModel().getCourierNum();
+				String company = getModel().getCompany();
+				String type = getModel().getType();
+				Standard standard = getModel().getStandard();
 
 				ArrayList<Predicate> list = new ArrayList<>();
 
@@ -145,14 +129,6 @@ public class CourierAction extends ActionSupport
 		Pageable pageable = new PageRequest(page - 1, rows);
 		Page<Courier> page = courierService.findAll(specification, pageable);
 
-		long total = page.getTotalElements();
-		List<Courier> list = page.getContent();
-
-		Map<String, Object> map = new HashMap<>();
-
-		map.put("total", total);
-		map.put("rows", list);
-
 		// 这里会发生懒加载,spring中只有集合属性会发生懒加载
 		// 发生懒加载异常时的解决方式:
 		// a.属性上增加transient 关键字,回导致所有调用都无法生成该字段的值
@@ -163,11 +139,7 @@ public class CourierAction extends ActionSupport
 		// Excludes忽略不用字段
 		jsonConfig.setExcludes(new String[] { "fixedAreas", "takeTime" });
 
-		String json = JSONObject.fromObject(map, jsonConfig).toString();
-
-		HttpServletResponse response = ServletActionContext.getResponse();
-		response.setContentType("application/json;charset=UTF-8");
-		response.getWriter().write(json);
+		pageToJson(page, jsonConfig);
 		return NONE;
 
 	}
@@ -178,6 +150,7 @@ public class CourierAction extends ActionSupport
 		this.ids = ids;
 	}
 
+	// 删除快递员
 	@Action(value = "courierAction_batchDel", results = {
 			@Result(name = "success", location = "/pages/base/courier.html", type = "redirect") })
 	public String batchDel() {
@@ -186,4 +159,29 @@ public class CourierAction extends ActionSupport
 		return SUCCESS;
 	}
 
+	// 查询在职快递员
+	@Action(value = "courierAction_listajax")
+	public String courierAction_listajax() throws IOException {
+		// 构建查询条件
+		Specification<Courier> specification = new Specification<Courier>() {
+
+			@Override
+			public Predicate toPredicate(Root<Courier> root,
+					CriteriaQuery<?> query, CriteriaBuilder cb) {
+				// 查找作废标记等于null的快递员
+				return cb.isNull(root.get("deltag").as(Character.class));
+			}
+
+		};
+		Page<Courier> page2 = courierService.findAll(specification, null);
+
+		List<Courier> list = page2.getContent();
+		JsonConfig jsonConfig = new JsonConfig();
+		// Excludes忽略不用字段
+		jsonConfig.setExcludes(new String[] { "fixedAreas", "takeTime" });
+
+		listToJson(list, jsonConfig);
+		return NONE;
+
+	}
 }

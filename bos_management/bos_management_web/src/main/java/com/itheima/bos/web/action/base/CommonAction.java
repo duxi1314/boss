@@ -58,6 +58,8 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 		this.rows = rows;
 	}
 
+	
+	//Page转JSON
 	public void pageToJson(Page<T> page, JsonConfig jsonConfig)
 			throws IOException {
 
@@ -86,8 +88,11 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write(json);
 	}
-
-	public void listToJson(List<T> list, JsonConfig jsonConfig)
+	
+	
+	
+	//集合转JSON
+	public void listToJson(List list, JsonConfig jsonConfig)
 			throws IOException {
 		String json;
 
